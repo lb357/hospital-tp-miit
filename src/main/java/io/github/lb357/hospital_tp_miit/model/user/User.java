@@ -21,6 +21,15 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    protected User(Integer id, String lastName, String firstName, String patronymicName, String passwordHash, UserRole role) {
+        this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.patronymicName = patronymicName;
+        this.passwordHash = passwordHash;
+        this.role = role;
+    }
+
     protected User() {}
 
     public Integer getId() {

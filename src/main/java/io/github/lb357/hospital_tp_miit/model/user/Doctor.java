@@ -8,8 +8,13 @@ import jakarta.persistence.*;
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Doctor extends User {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "specialization_id")
+    @JoinColumn(name = "specialization_id", referencedColumnName = "id", foreignKey = @ForeignKey(name="fk_doctor_specialization"))
     private Specialization specialization;
+
+    public Doctor(Integer id, String lastName, String firstName, String patronymicName, String passwordHash, UserRole role, Specialization specialization) {
+        super(id, lastName, firstName, patronymicName, passwordHash, role);
+        this.specialization = specialization;
+    }
 
     protected Doctor() {}
 

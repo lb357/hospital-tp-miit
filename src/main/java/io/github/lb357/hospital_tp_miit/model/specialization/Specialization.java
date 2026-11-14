@@ -13,5 +13,18 @@ public class Specialization {
     @Column(nullable = false, unique = true)
     private String name;
 
+    public Specialization(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     protected Specialization() {}
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
