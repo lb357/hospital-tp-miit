@@ -51,6 +51,10 @@ public class AppointmentService {
         //todo
     }
 
+    public void removePatientFromAppointment(Appointment appointment) {
+        //todo
+    }
+
     public Appointment getAppointment(Integer id) {
         //todo
         return null;

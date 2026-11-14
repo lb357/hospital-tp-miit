@@ -2,9 +2,11 @@ package io.github.lb357.hospital_tp_miit.model.session;
 
 import io.github.lb357.hospital_tp_miit.model.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "sessions")
 public class Session {
@@ -28,15 +30,5 @@ public class Session {
 
     protected Session() {}
 
-    public String getTokenHash() {
-        return tokenHash;
-    }
 
-    public User getUser() {
-        return user;
-    }
-
-    public LocalDateTime getExpiryTime() {
-        return expiryTime;
-    }
 }

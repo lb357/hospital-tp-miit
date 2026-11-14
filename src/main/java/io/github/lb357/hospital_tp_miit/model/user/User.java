@@ -1,28 +1,34 @@
 package io.github.lb357.hospital_tp_miit.model.user;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Setter
     private String lastName;
 
+    @Setter
     private String firstName;
 
+    @Setter
     private String patronymicName;
 
+    @Setter
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    protected User(Integer id, String lastName, String firstName, String patronymicName, String passwordHash, UserRole role) {
-        this.id = id;
+    protected User(String lastName, String firstName, String patronymicName, String passwordHash, UserRole role) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymicName = patronymicName;
@@ -32,27 +38,4 @@ public abstract class User {
 
     protected User() {}
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getPatronymicName() {
-        return patronymicName;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
 }

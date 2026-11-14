@@ -4,10 +4,13 @@ import io.github.lb357.hospital_tp_miit.model.checkup.Checkup;
 import io.github.lb357.hospital_tp_miit.model.user.Doctor;
 import io.github.lb357.hospital_tp_miit.model.user.Patient;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
+@Getter
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -15,24 +18,28 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", foreignKey = @ForeignKey(name="fk_appointment_patient"))
     private Patient patient;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", foreignKey = @ForeignKey(name="fk_appointment_doctor"))
     private Doctor doctor;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checkup_id", referencedColumnName = "id", foreignKey = @ForeignKey(name="fk_appointment_checkup"))
     private Checkup checkup;
 
+    @Setter
     private String room;
 
+    @Setter
     private LocalDateTime appointedTime;
 
-    public Appointment(Integer id, Patient patient, Doctor doctor, Checkup checkup, String room, LocalDateTime appointedTime) {
-        this.id = id;
+    public Appointment(Patient patient, Doctor doctor, Checkup checkup, String room, LocalDateTime appointedTime) {
         this.patient = patient;
         this.doctor = doctor;
         this.checkup = checkup;
@@ -42,27 +49,5 @@ public class Appointment {
 
     protected Appointment() {}
 
-    public Integer getId() {
-        return id;
-    }
 
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public Checkup getCheckup() {
-        return checkup;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public LocalDateTime getAppointedTime() {
-        return appointedTime;
-    }
 }

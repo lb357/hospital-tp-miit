@@ -2,9 +2,11 @@ package io.github.lb357.hospital_tp_miit.model.checkup;
 import io.github.lb357.hospital_tp_miit.model.specialization.Specialization;
 import io.github.lb357.hospital_tp_miit.model.user.Patient;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "checkups")
 public class Checkup {
@@ -25,25 +27,11 @@ public class Checkup {
     )
     private List<Specialization> specializations;
 
-    public Checkup(Integer id, Patient patient, List<Specialization> specializations) {
-        this.id = id;
+    public Checkup(Patient patient, List<Specialization> specializations) {
         this.patient = patient;
         this.specializations = specializations;
     }
 
     protected Checkup() {}
-
-    public Integer getId() {
-        return id;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public List<Specialization> getSpecializations() {
-        return specializations;
-    }
-
 
 }

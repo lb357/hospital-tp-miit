@@ -1,6 +1,7 @@
 package io.github.lb357.hospital_tp_miit.service;
 
 
+import io.github.lb357.hospital_tp_miit.component.Hasher;
 import io.github.lb357.hospital_tp_miit.model.session.Session;
 import io.github.lb357.hospital_tp_miit.model.specialization.Specialization;
 import io.github.lb357.hospital_tp_miit.model.user.*;
@@ -9,83 +10,91 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
     private final EntityManager entityManager;
+    private final Hasher hasher;
 
     public String login(Integer id, String password) {
-        //todo
-        return "";
+        User user = entityManager.find(User.class, id);
+        if (user == null || !user.getPasswordHash().equals(hasher.hash(password))) return null;
+        String token = UUID.randomUUID().toString();
+        entityManager.persist(new Session(hasher.hash(token), user, LocalDateTime.now().plusDays(7)));
+        return token;
     }
 
     public void logout(String token) {
-        //todo
+        Session session = entityManager.find(Session.class, hasher.hash(token));
+        if (session != null) entityManager.remove(session);
     }
 
     public void deleteUser(User user) {
-
+        if (user != null && entityManager.contains(user)) entityManager.remove(user);
     }
 
     public void updateUser(User user, String lastName, String firstName, String patronymicName) {
-        //todo
+        if (lastName!=null && !lastName.isBlank()) user.setLastName(lastName);
+        if (firstName!=null && !firstName.isBlank()) user.setFirstName(firstName);
+        if (patronymicName!=null && !patronymicName.isBlank()) user.setFirstName(patronymicName);
     }
 
     public User getUser(Session session) {
-        //todo
-        return null;
+        return session.getUser();
     }
 
     public User getUser(Integer id) {
-        //todo
-        return null;
+        return entityManager.find(User.class, id);
     }
 
     public Session getSession(String token) {
-        //todo
-        return null;
+        return entityManager.find(Session.class, hasher.hash(token));
     }
 
     public Patient signupPatient(String lastName, String firstName, String patronymicName, String password, Boolean gender) {
-        //todo
-        return null;
+        Patient patient = new Patient(lastName, firstName, patronymicName, password, gender);
+        entityManager.persist(patient);
+        return patient;
     }
 
     public Doctor signupDoctor(String lastName, String firstName, String patronymicName, String password, Specialization specialization) {
-        //todo
-        return null;
+        Doctor doctor = new Doctor(lastName, firstName, patronymicName, password, specialization);
+        entityManager.persist(doctor);
+        return doctor;
     }
 
     public Admin signupAdmin(String lastName, String firstName, String patronymicName, String password) {
-        //todo
-        return null;
+        Admin admin = new Admin(lastName, firstName, patronymicName, password);
+        entityManager.persist(admin);
+        return admin;
     }
 
     public List<User> getAllUsers() {
-        //todo
-        return null;
+        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     public Patient getPatient(Integer id) {
-        //todo
-        return null;
+        return entityManager.find(Patient.class, id);
     }
 
     public Doctor getDoctor(Integer id) {
-        //todo
-        return null;
+        return entityManager.find(Doctor.class, id);
     }
 
     public Admin getAdmin(Integer id) {
-        //todo
-        return null;
+        return entityManager.find(Admin.class, id);
     }
 
     public List<Doctor> getDoctorsBySpecialization(Specialization specialization) {
-        //todo
-        return null;
+        return entityManager.createQuery(
+                "SELECT d FROM Doctor d WHERE d.specialization = :specialization",
+                        Doctor.class
+                ).setParameter("specialization", specialization)
+                .getResultList();
     }
 }
