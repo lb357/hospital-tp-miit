@@ -15,21 +15,20 @@ public class SpecializationService {
     private final EntityManager entityManager;
 
     public Specialization createSpecialization(String name) {
-        //todo
-        return null;
+        Specialization specialization = new Specialization(name);
+        entityManager.persist(specialization);
+        return specialization;
     }
 
     public void deleteSpecialization(Specialization specialization) {
-        //todo
+        if (specialization != null && entityManager.contains(specialization)) entityManager.remove(specialization);
     }
 
     public Specialization getSpecialization(Integer id) {
-        //todo
-        return null;
+        return entityManager.find(Specialization.class, id);
     }
 
     public List<Specialization> getSpecializations() {
-        //todo
-        return null;
+        return entityManager.createQuery("SELECT s FROM Specialization s", Specialization.class).getResultList();
     }
 }

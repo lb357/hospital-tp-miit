@@ -39,10 +39,8 @@ public class Appointment {
     @Setter
     private LocalDateTime appointedTime;
 
-    public Appointment(Patient patient, Doctor doctor, Checkup checkup, String room, LocalDateTime appointedTime) {
-        this.patient = patient;
+    public Appointment(Doctor doctor, String room, LocalDateTime appointedTime) {
         this.doctor = doctor;
-        this.checkup = checkup;
         this.room = room;
         this.appointedTime = appointedTime;
     }

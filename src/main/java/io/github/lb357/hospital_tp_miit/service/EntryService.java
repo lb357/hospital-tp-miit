@@ -15,18 +15,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EntryService {
     private final EntityManager entityManager;
+    private final AppointmentService appointmentService;
 
     public Entry createEntry(Appointment appointment, String content) {
-        //todo
-        return null;
+        Entry entry = new Entry(appointment, content);
+        entityManager.persist(entry);
+        return entry;
     }
 
     public void updateEntry(String content, Entry entry) {
-        //todo
+        if (content != null && !content.isBlank()) entry.setContent(content);
+    }
+
+    public Entry getAppointmentEntry(Appointment appointment) {
+        return entityManager.createQuery(
+                "SELECT e FROM Entry e WHERE e.appointment = :appointment", Entry.class
+        ).setParameter("appointment", appointment).getSingleResultOrNull();
     }
 
     public List<Entry> getPatientEntries(Patient patient) {
-        //todo
-        return null;
+        return appointmentService.getPatientAppointments(patient).stream().map(this::getAppointmentEntry).toList();
     }
 }

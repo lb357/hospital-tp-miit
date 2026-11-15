@@ -41,7 +41,7 @@ public class AccountService {
     public void updateUser(User user, String lastName, String firstName, String patronymicName) {
         if (lastName!=null && !lastName.isBlank()) user.setLastName(lastName);
         if (firstName!=null && !firstName.isBlank()) user.setFirstName(firstName);
-        if (patronymicName!=null && !patronymicName.isBlank()) user.setFirstName(patronymicName);
+        if (patronymicName!=null && !patronymicName.isBlank()) user.setPatronymicName(patronymicName);
     }
 
     public User getUser(Session session) {

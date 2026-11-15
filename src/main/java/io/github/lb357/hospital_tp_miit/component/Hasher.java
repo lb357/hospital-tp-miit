@@ -9,7 +9,6 @@ import java.util.HexFormat;
 
 @Component
 public class Hasher {
-
     public String hash(String value) {
         try {
             return HexFormat.of().formatHex(
