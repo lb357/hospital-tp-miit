@@ -45,14 +45,17 @@ public class AccountService {
     }
 
     public User getUser(Session session) {
+        if(session==null) return null;
         return session.getUser();
     }
 
     public User getUser(Integer id) {
+        if (id==null) return null;
         return entityManager.find(User.class, id);
     }
 
     public Session getSession(String token) {
+        if (token==null) return null;
         return entityManager.find(Session.class, hasher.hash(token));
     }
 
@@ -79,14 +82,17 @@ public class AccountService {
     }
 
     public Patient getPatient(Integer id) {
+        if(id==null) return null;
         return entityManager.find(Patient.class, id);
     }
 
     public Doctor getDoctor(Integer id) {
+        if(id==null) return null;
         return entityManager.find(Doctor.class, id);
     }
 
     public Admin getAdmin(Integer id) {
+        if(id==null) return null;
         return entityManager.find(Admin.class, id);
     }
 
