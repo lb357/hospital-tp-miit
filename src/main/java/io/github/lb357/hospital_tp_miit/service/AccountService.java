@@ -22,6 +22,7 @@ public class AccountService {
     private final Hasher hasher;
 
     public String login(Integer id, String password) {
+        if (id==null||password==null) return null;
         User user = entityManager.find(User.class, id);
         if (user == null || !user.getPasswordHash().equals(hasher.hash(password))) return null;
         String token = UUID.randomUUID().toString();
@@ -60,19 +61,22 @@ public class AccountService {
     }
 
     public Patient signupPatient(String lastName, String firstName, String patronymicName, String password, Boolean gender) {
-        Patient patient = new Patient(lastName, firstName, patronymicName, password, gender);
+        if (lastName==null||firstName==null||patronymicName==null||password==null||gender==null) return null;
+        Patient patient = new Patient(lastName, firstName, patronymicName, hasher.hash(password), gender);
         entityManager.persist(patient);
         return patient;
     }
 
     public Doctor signupDoctor(String lastName, String firstName, String patronymicName, String password, Specialization specialization) {
-        Doctor doctor = new Doctor(lastName, firstName, patronymicName, password, specialization);
+        if (lastName==null||firstName==null||patronymicName==null||password==null||specialization==null) return null;
+        Doctor doctor = new Doctor(lastName, firstName, patronymicName, hasher.hash(password), specialization);
         entityManager.persist(doctor);
         return doctor;
     }
 
     public Admin signupAdmin(String lastName, String firstName, String patronymicName, String password) {
-        Admin admin = new Admin(lastName, firstName, patronymicName, password);
+        if (lastName==null||firstName==null||patronymicName==null||password==null) return null;
+        Admin admin = new Admin(lastName, firstName, patronymicName, hasher.hash(password));
         entityManager.persist(admin);
         return admin;
     }

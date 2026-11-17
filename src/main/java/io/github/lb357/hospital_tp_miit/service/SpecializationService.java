@@ -25,6 +25,7 @@ public class SpecializationService {
     }
 
     public Specialization getSpecialization(Integer id) {
+        if (id == null) return null;
         return entityManager.find(Specialization.class, id);
     }
 
