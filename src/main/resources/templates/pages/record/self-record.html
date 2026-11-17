@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Медкарта</title>
-</head>
-<body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>Медкарта</h1>
-</body>
-</html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Моя медицинская карта</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><div th:replace="~{fragments/header :: header}"></div>
+<main data-record-role="PATIENT">
+    <div class="page-heading"><div><h1>Моя медицинская карта</h1><p class="lead">История проведённых приёмов и записей врачей.</p></div><span class="badge">Пациент</span></div>
+    <div id="record-notice" class="notice"></div>
+    <section class="card"><div class="toolbar"><h2>Записи осмотров</h2><button type="button" id="refresh-record" class="secondary">Обновить</button></div><div id="record-list" class="stack"><div class="muted">Загрузка…</div></div></section>
+</main>
+<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/record.js}"></script></body></html>

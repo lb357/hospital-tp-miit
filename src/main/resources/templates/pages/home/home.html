@@ -2,10 +2,30 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Больница</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Медцентр — главная</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>Больница</h1>
+<div th:replace="~{fragments/header :: header}"></div>
+<main>
+    <section class="hero">
+        <span class="badge">Демонстрационная система</span>
+        <h1>Медицинские приёмы и карты пациентов — в одном месте</h1>
+        <p>Веб-прототип для пациентов, врачей и администраторов больницы. Записи, назначения медосмотров и история осмотров собраны в едином интерфейсе.</p>
+        <div class="hero-actions">
+            <a class="button" th:href="@{/login}">Войти в систему</a>
+            <a class="button secondary" th:href="@{/about}">О проекте</a>
+        </div>
+    </section>
+    <section class="grid" style="margin-top:20px">
+        <article class="card third"><h2>Пациентам</h2><p class="muted">Просмотр назначенных медосмотров, своих приёмов и медицинской карты.</p><a th:href="@{/appointments}">Мои приёмы →</a></article>
+        <article class="card third"><h2>Врачам</h2><p class="muted">Расписание приёмов и ведение записей по завершённым осмотрам.</p><a th:href="@{/record}">Медкарты →</a></article>
+        <article class="card third"><h2>Администраторам</h2><p class="muted">Пользователи, специальности, расписание и назначения медосмотров.</p><a th:href="@{/admin}">Панель управления →</a></article>
+    </section>
+</main>
+<footer class="footer">Демонстрационный учебный проект · Java 21 · Spring Boot</footer>
+<script th:src="@{/js/api.js}"></script>
+<script th:src="@{/js/common.js}"></script>
 </body>
 </html>

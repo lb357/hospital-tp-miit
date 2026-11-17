@@ -1,11 +1,76 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Панель администратора</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Панель администратора</title><link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>Панель администратора</h1>
+<div th:replace="~{fragments/header :: header}"></div>
+<main data-admin-page>
+    <div class="page-heading"><div><h1>Панель администратора</h1><p class="lead">Управление учётными записями, специальностями, расписанием и назначениями.</p></div><span class="badge">Администратор</span></div>
+    <div id="admin-notice" class="notice" role="status"></div>
+
+    <section class="grid">
+        <article class="card half">
+            <div class="toolbar"><h2>Пользователи</h2><button type="button" class="secondary" id="refresh-users">Обновить</button></div>
+            <div class="table-wrap"><table><thead><tr><th>ID</th><th>ФИО</th><th>Роль</th><th>Действия</th></tr></thead><tbody id="user-list"><tr><td colspan="4" class="muted">Загрузка…</td></tr></tbody></table></div>
+        </article>
+        <article class="card half">
+            <h2>Регистрация пользователя</h2>
+            <p class="muted"><small>Форма вызывает <code>/api/auth/signup</code>; ожидается согласование формата с разработчиком AuthController.</small></p>
+            <form id="signup-form" class="form-grid">
+                <label>Тип учётной записи<select name="role" id="signup-role"><option value="PATIENT">Пациент</option><option value="DOCTOR">Врач</option></select></label>
+                <label>Фамилия<input name="lastName" required></label>
+                <label>Имя<input name="firstName" required></label>
+                <label>Отчество<input name="patronymicName"></label>
+                <label>Временный пароль<input name="password" type="password" required minlength="4"></label>
+                <label id="gender-field">Пол<select name="gender"><option value="true">Мужской</option><option value="false">Женский</option></select></label>
+                <label id="signup-specialization-field" class="hidden">Специальность врача<select name="specializationId" id="signup-specialization"></select></label>
+                <div class="wide actions"><button type="submit">Зарегистрировать</button></div>
+            </form>
+            <div id="signup-result" class="notice"></div>
+        </article>
+
+        <article class="card half">
+            <div class="toolbar"><h2>Специальности врачей</h2><button type="button" class="secondary" id="refresh-specializations">Обновить</button></div>
+            <form id="specialization-form" class="form-grid">
+                <label class="wide">Название специальности<input name="name" required maxlength="120" placeholder="Например, терапевт"></label>
+                <div class="wide actions"><button type="submit">Добавить специальность</button></div>
+            </form>
+            <div id="specialization-list" class="stack" style="margin-top:14px"></div>
+        </article>
+
+        <article class="card half">
+            <h2>Создать свободный слот приёма</h2>
+            <form id="slot-form" class="form-grid">
+                <label class="wide">Врач<select name="doctorId" id="slot-doctor" required></select></label>
+                <label>Кабинет<input name="room" required maxlength="80"></label>
+                <label>Дата и время<input name="appointedTime" type="datetime-local" required></label>
+                <div class="wide actions"><button type="submit">Создать слот</button><button class="secondary" id="refresh-slots" type="button">Обновить список</button></div>
+            </form>
+            <div id="slot-list" class="stack" style="margin-top:16px"></div>
+        </article>
+
+        <article class="card half">
+            <h2>Назначить медосмотр</h2>
+            <form id="checkup-form" class="form-grid">
+                <label class="wide">Пациент<select name="patientId" id="checkup-patient" required></select></label>
+                <label class="wide">Специальности (можно выбрать несколько)<select id="checkup-specializations" name="specializationIds" multiple size="5" required></select></label>
+                <div class="wide actions"><button type="submit">Назначить медосмотр</button><button class="secondary" type="button" id="refresh-checkups">Обновить назначения</button></div>
+            </form>
+            <div id="checkup-list" class="stack" style="margin-top:16px"></div>
+        </article>
+
+        <article class="card half">
+            <h2>Медкарта пациента</h2>
+            <form id="record-search-form" class="form-grid">
+                <label class="wide">Пациент<select id="record-patient" required></select></label>
+                <div class="wide actions"><button type="submit">Показать медкарту</button></div>
+            </form>
+            <div id="admin-record-results" class="stack" style="margin-top:16px"></div>
+        </article>
+    </section>
+</main>
+<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
