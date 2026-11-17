@@ -29,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody LoginRequest request) {
+        System.out.println(request);
         Session session = cookieTokenResolver.getSession();
         if (session != null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String token = accountService.login(request.userId(), request.password());

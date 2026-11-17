@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         try {
             await HospitalApi.post('/api/auth/login', {
-                id: Number(formData.get('id')),
+                userId: Number(formData.get('id')),
                 password: String(formData.get('password'))
             });
             // Verify that AuthController actually established the cookie-backed session.

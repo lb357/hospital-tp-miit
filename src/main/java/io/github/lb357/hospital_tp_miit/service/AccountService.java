@@ -24,6 +24,7 @@ public class AccountService {
     public String login(Integer id, String password) {
         if (id==null||password==null) return null;
         User user = entityManager.find(User.class, id);
+        System.out.printf("%s %s %s %s %s", id, password, user, user.getPasswordHash(), hasher.hash(password));
         if (user == null || !user.getPasswordHash().equals(hasher.hash(password))) return null;
         String token = UUID.randomUUID().toString();
         entityManager.persist(new Session(hasher.hash(token), user, LocalDateTime.now().plusDays(7)));
