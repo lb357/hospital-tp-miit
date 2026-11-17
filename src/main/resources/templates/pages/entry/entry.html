@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Редактирование медкарты</title>
-</head>
-<body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>Редактирование медкарты</h1>
-</body>
-</html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Запись в медицинскую карту</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><div th:replace="~{fragments/header :: header}"></div>
+<main data-entry-page>
+    <div class="page-heading"><div><h1>Ведение медицинской карты</h1><p class="lead">Создание и изменение записи по завершённому приёму.</p></div><span class="badge">Врач</span></div>
+    <div id="entry-notice" class="notice"></div>
+    <section class="card">
+        <form id="entry-form" class="stack">
+            <label>Приём<select id="entry-appointment" required><option value="">Загрузка расписания…</option></select></label>
+            <label>Содержание осмотра<textarea id="entry-content" required maxlength="4000" placeholder="Опишите результаты осмотра…"></textarea></label>
+            <div class="actions"><button type="submit" id="entry-save" disabled>Сохранить запись</button></div>
+        </form>
+    </section>
+</main>
+<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/entry.js}"></script></body></html>

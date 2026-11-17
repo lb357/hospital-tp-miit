@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Записи</title>
-</head>
-<body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>Записи</h1>
-</body>
-</html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Расписание врача</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><div th:replace="~{fragments/header :: header}"></div>
+<main data-appointments-role="DOCTOR">
+    <div class="page-heading"><div><h1>Моё расписание</h1><p class="lead">Просмотр приёмов и оформление записей в медицинских картах пациентов.</p></div><span class="badge">Врач</span></div>
+    <div id="appointments-notice" class="notice"></div>
+    <section class="grid">
+        <article class="card"><div class="toolbar"><h2>Приёмы</h2><button id="refresh-appointments" class="secondary" type="button">Обновить</button></div><div id="appointment-list" class="stack"></div></article>
+        <article class="card" id="appointment-editor">
+            <h2>Запись в медицинскую карту</h2><p id="selected-appointment-hint" class="muted">Выберите приём из списка выше.</p>
+            <form id="entry-form" class="stack">
+                <input type="hidden" name="appointmentId" id="entry-appointment-id">
+                <label>Содержание осмотра<textarea name="content" id="entry-content" required maxlength="4000" placeholder="Жалобы, результаты осмотра, рекомендации…"></textarea></label>
+                <div class="actions"><button type="submit" id="save-entry" disabled>Сохранить запись</button><button type="button" class="secondary" id="clear-entry">Очистить форму</button></div>
+            </form>
+        </article>
+    </section>
+</main>
+<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/appointments.js}"></script></body></html>

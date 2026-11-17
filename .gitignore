@@ -33,3 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+report.odt
+report.pdf
+/Hospital/

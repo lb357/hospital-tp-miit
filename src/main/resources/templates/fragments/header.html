@@ -1,7 +1,11 @@
-<header th:fragment="header">
-    <nav>
-        <a th:href="@{/}">Больница</a>
-        <a th:href="@{/profile}">Личный кабинет</a>
+<header class="site-header" th:fragment="header">
+    <a class="brand" th:href="@{/}">Медцентр · система учёта</a>
+    <nav class="nav" aria-label="Основная навигация">
+        <a th:href="@{/profile}">Профиль</a>
+        <a th:href="@{/appointments}">Приёмы</a>
+        <a th:href="@{/record}">Медкарта</a>
+        <a th:href="@{/admin}">Администрирование</a>
         <a th:href="@{/about}">О проекте</a>
+        <button class="secondary" type="button" data-logout>Выйти</button>
     </nav>
 </header>
