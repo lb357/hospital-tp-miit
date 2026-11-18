@@ -1,10 +1,11 @@
+
 package io.github.lb357.hospital_tp_miit.controller.api;
 
 import io.github.lb357.hospital_tp_miit.component.CookieTokenResolver;
 import io.github.lb357.hospital_tp_miit.dto.*;
 import io.github.lb357.hospital_tp_miit.model.session.Session;
-import io.github.lb357.hospital_tp_miit.model.user.User;
-import io.github.lb357.hospital_tp_miit.model.user.UserRole;
+import io.github.lb357.hospital_tp_miit.model.specialization.Specialization;
+import io.github.lb357.hospital_tp_miit.model.user.*;
 import io.github.lb357.hospital_tp_miit.service.AccountService;
 import io.github.lb357.hospital_tp_miit.service.SpecializationService;
 import lombok.RequiredArgsConstructor;
@@ -23,61 +24,178 @@ import java.time.Duration;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final CookieTokenResolver cookieTokenResolver;
     private final AccountService accountService;
     private final SpecializationService specializationService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest request) {
-        System.out.println(request);
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Session session = cookieTokenResolver.getSession();
-        if (session != null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        if (session != null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         String token = accountService.login(request.userId(), request.password());
-        if (token == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        if (token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         User user = accountService.getSession(token).getUser();
-        ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true).secure(true).path("/").maxAge(Duration.ofDays(30)).build();
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new UserResponse(user.getId(), user.getLastName(), user.getFirstName(), user.getPatronymicName()));
+
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(30))
+                .build();
+
+        if (user.getRole() == UserRole.PATIENT) {
+            Patient patient = accountService.getPatient(user.getId());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new PatientResponse(
+                            new UserResponse(user.getId(), user.getLastName(),
+                                    user.getFirstName(), user.getPatronymicName()),
+                            patient.isGender()
+                    ));
+        }
+
+        if (user.getRole() == UserRole.DOCTOR) {
+            Doctor doctor = accountService.getDoctor(user.getId());
+            Specialization specialization = doctor.getSpecialization();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new DoctorResponse(
+                            new UserResponse(user.getId(), user.getLastName(),
+                                    user.getFirstName(), user.getPatronymicName()),
+                            specialization == null ? null :
+                                    new SpecializationResponse(
+                                            specialization.getId(),
+                                            specialization.getName())
+                    ));
+        }
+
+        if (user.getRole() == UserRole.ADMIN) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new AdminResponse(
+                            new UserResponse(user.getId(), user.getLastName(),
+                                    user.getFirstName(), user.getPatronymicName())
+                    ));
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse> logout() {
         String token = cookieTokenResolver.resolve();
         Session session = accountService.getSession(token);
-        if (session == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true).secure(true).path("/").maxAge(0).build();
+
+        if (session == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
         try {
             accountService.logout(token);
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new SuccessResponse(true));
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new SuccessResponse(true));
+
         } catch (IllegalArgumentException ignore) {
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new SuccessResponse(false));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new SuccessResponse(false));
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
         Session session = cookieTokenResolver.getSession();
-        if (session == null || !accountService.getUser(session).getRole().equals(UserRole.ADMIN))
+
+        if (session == null ||
+                accountService.getUser(session).getRole() != UserRole.ADMIN)
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
         User user;
+
         switch (request.role()) {
-            case "patient"-> user = accountService.signupPatient(
-                    request.lastName(), request.firstName(),
-                    request.patronymicName(), request.password(), request.patientGender()
+            case "patient" -> user = accountService.signupPatient(
+                    request.lastName(),
+                    request.firstName(),
+                    request.patronymicName(),
+                    request.password(),
+                    request.patientGender().isPresent()
+                            ? request.patientGender().get() : null
             );
+
             case "doctor" -> user = accountService.signupDoctor(
-                    request.lastName(), request.firstName(),request.patronymicName(), request.password(),
-                    specializationService.getSpecialization(request.doctorSpecializationId())
+                    request.lastName(),
+                    request.firstName(),
+                    request.patronymicName(),
+                    request.password(),
+                    specializationService.getSpecialization(
+                            request.doctorSpecializationId().isPresent()
+                                    ? request.doctorSpecializationId().get() : null
+                    )
             );
+
             case "admin" -> user = accountService.signupAdmin(
-                    request.lastName(), request.firstName(), request.patronymicName(), request.password()
+                    request.lastName(),
+                    request.firstName(),
+                    request.patronymicName(),
+                    request.password()
             );
+
             default -> {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         }
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getLastName(), user.getFirstName(), user.getPatronymicName()));
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        if (user.getRole() == UserRole.PATIENT) {
+            Patient patient = accountService.getPatient(user.getId());
+
+            return ResponseEntity.ok(new PatientResponse(
+                    new UserResponse(user.getId(), user.getLastName(),
+                            user.getFirstName(), user.getPatronymicName()),
+                    patient.isGender()
+            ));
+        }
+
+        if (user.getRole() == UserRole.DOCTOR) {
+            Doctor doctor = accountService.getDoctor(user.getId());
+            Specialization specialization = doctor.getSpecialization();
+
+            return ResponseEntity.ok(new DoctorResponse(
+                    new UserResponse(user.getId(), user.getLastName(),
+                            user.getFirstName(), user.getPatronymicName()),
+                    specialization == null ? null :
+                            new SpecializationResponse(
+                                    specialization.getId(),
+                                    specialization.getName())
+            ));
+        }
+
+        if (user.getRole() == UserRole.ADMIN) {
+            return ResponseEntity.ok(new AdminResponse(
+                    new UserResponse(user.getId(), user.getLastName(),
+                            user.getFirstName(), user.getPatronymicName())
+            ));
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

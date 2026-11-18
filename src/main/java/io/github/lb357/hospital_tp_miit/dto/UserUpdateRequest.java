@@ -1,8 +1,10 @@
 package io.github.lb357.hospital_tp_miit.dto;
 
+import java.util.Optional;
+
 public record UserUpdateRequest(
         Integer userId,
-        String lastName,
-        String firstName,
-        String patronymicName
+        Optional<String> lastName,
+        Optional<String> firstName,
+        Optional<String> patronymicName
 ) {}

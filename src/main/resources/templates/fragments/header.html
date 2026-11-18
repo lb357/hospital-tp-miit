@@ -1,11 +1,32 @@
-<header class="site-header" th:fragment="header">
-    <a class="brand" th:href="@{/}">Медцентр · система учёта</a>
-    <nav class="nav" aria-label="Основная навигация">
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header">
+    <h1>БОЛЬНИЦА</h1>
+    <div th:if="${@cookieTokenResolver.getSession() != null}">
         <a th:href="@{/profile}">Профиль</a>
         <a th:href="@{/appointments}">Приёмы</a>
         <a th:href="@{/record}">Медкарта</a>
-        <a th:href="@{/admin}">Администрирование</a>
-        <a th:href="@{/about}">О проекте</a>
-        <button class="secondary" type="button" data-logout>Выйти</button>
-    </nav>
+
+        <button type="button" id="logoutButton">Выход из системы</button>
+    </div>
+    <a th:unless="${@cookieTokenResolver.getSession() != null}" th:href="@{/login}">Вход в систему</a>
+    <hr>
+
+    <script type="module">
+        import { protocol, request } from '/js/protocol.js';
+
+        document.getElementById('logoutButton')?.addEventListener('click', async () => {
+            const result = await request(
+                () => protocol.logout(),
+                (message) => alert(message)
+            );
+
+            if (result !== null) {
+                window.location.href = '/login';
+            }
+        });
+    </script>
 </header>
+</body>
+</html>

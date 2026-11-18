@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Профиль администратора</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body><div th:replace="~{fragments/header :: header}"></div>
-<main data-profile-page>
-    <div class="page-heading"><div><h1>Личный кабинет</h1><p class="lead">Профиль администратора больницы.</p></div><span class="badge">Администратор</span></div>
-    <div id="profile-notice" class="notice"></div>
-    <section class="card"><h2 id="profile-name">Загрузка профиля…</h2><div id="profile-details" class="muted"></div>
-        <div class="actions"><a class="button" th:href="@{/admin}">Панель управления</a><a class="button secondary" th:href="@{/appointments}">Расписание приёмов</a></div>
-    </section>
-</main>
-<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/profile.js}"></script></body></html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Управление приёмами</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body><div th:replace="~{fragments/header :: header}"></div>
-<main data-appointments-role="ADMIN">
-    <div class="page-heading"><div><h1>Управление приёмами</h1><p class="lead">Общее расписание врачей, свободные слоты и занятые приёмы.</p></div><span class="badge">Администратор</span></div>
-    <div id="appointments-notice" class="notice"></div>
-    <section class="card"><div class="toolbar"><h2>Расписание</h2><button id="refresh-appointments" class="secondary" type="button">Обновить</button></div><div id="appointment-list" class="stack"></div>
-        <div class="actions"><a class="button" th:href="@{/admin}">Создать слот / перейти к управлению</a></div>
-    </section>
-</main>
-<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/appointments.js}"></script></body></html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Приёмы</title>
+        <link rel="stylesheet" th:href="@{/css/app.css}">
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>

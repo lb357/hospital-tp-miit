@@ -4,6 +4,8 @@ import io.github.lb357.hospital_tp_miit.model.specialization.Specialization;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "doctors")
@@ -13,6 +15,7 @@ public class Doctor extends User {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialization_id", referencedColumnName = "id", foreignKey = @ForeignKey(name="fk_doctor_specialization"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Specialization specialization;
 
     public Doctor(String lastName, String firstName, String patronymicName, String passwordHash, Specialization specialization) {

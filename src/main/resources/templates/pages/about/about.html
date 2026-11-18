@@ -1,6 +1,17 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>О проекте</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body><div th:replace="~{fragments/header :: header}"></div>
-<main><div class="page-heading"><div><h1>О проекте</h1><p class="lead">Демонстрационная информационная система для больницы.</p></div></div>
-    <section class="card"><p>Проект реализован в рамках курсовой работы по дисциплине «Технологии программирования» студентами РУТ группы УВП-212.</p><p class="muted">Серверная часть: Java 21, Spring Boot, JPA. Клиентская часть: HTML, CSS и JavaScript. Данные предметной области включают пользователей, врачей, пациентов, специальности, медосмотры, приёмы и записи в медицинской карте.</p></section>
-</main><script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script></body></html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>О проекте</title>
+        <link rel="stylesheet" th:href="@{/css/app.css}">
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <main>
+            <h2>О проекте «Больница»</h2>
+            <p>Проект реализован в рамках курсовой работы по дисциплине «Технологии программирования»</p>
+            <p>студентами группы УВП-212 РУТ (МИИТ): Брискиндов Л. и Кленин А.</p>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>

@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Медицинские карты</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body><div th:replace="~{fragments/header :: header}"></div>
-<main data-record-role="OTHER">
-    <div class="page-heading"><div><h1>Медицинские карты</h1><p class="lead">Просмотр медицинских записей пациентов.</p></div></div>
-    <div id="record-notice" class="notice"></div>
-    <section class="card">
-        <form id="record-search-form" class="form-grid">
-            <label class="wide">Пациент<select id="record-patient" required><option value="">Загрузка списка…</option></select></label>
-            <div class="wide actions"><button type="submit">Открыть медкарту</button><button type="button" class="secondary" id="refresh-record-patients">Обновить список</button></div>
-        </form>
-    </section>
-    <section class="card" style="margin-top:18px"><h2>Записи осмотров</h2><div id="record-list" class="stack"><div class="muted">Выберите пациента.</div></div></section>
-</main>
-<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/record.js}"></script></body></html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Медкарта</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

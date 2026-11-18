@@ -6,6 +6,8 @@ import io.github.lb357.hospital_tp_miit.model.user.Patient;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -21,16 +23,19 @@ public class Appointment {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", foreignKey = @ForeignKey(name="fk_appointment_patient"))
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Patient patient;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", foreignKey = @ForeignKey(name="fk_appointment_doctor"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Doctor doctor;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checkup_id", referencedColumnName = "id", foreignKey = @ForeignKey(name="fk_appointment_checkup"))
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Checkup checkup;
 
     @Setter

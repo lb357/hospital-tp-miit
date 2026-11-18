@@ -2,31 +2,51 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Вход в систему</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
-<main class="login-shell">
-    <section class="card">
-        <h1>Вход в систему</h1>
-        <p class="muted">Введите свой идентификационный номер и пароль.</p>
-        <div id="login-notice" class="notice" role="status"></div>
-        <form id="login-form" class="stack">
-            <label>Идентификационный номер
-                <input name="id" type="number" min="1" required autocomplete="username" placeholder="Например, 1001">
-            </label>
-            <label>Пароль
-                <input name="password" type="password" required autocomplete="current-password">
-            </label>
-            <button type="submit">Войти</button>
-        </form>
-        <p class="muted" style="margin-top:16px"><small>Вход использует API <code>/api/auth/login</code>. Контракт будет согласован с реализацией AuthController.</small></p>
-    </section>
-</main>
-<script th:src="@{/js/api.js}"></script>
-<script th:src="@{/js/common.js}"></script>
-<script th:src="@{/js/login.js}"></script>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <form id="loginForm">
+        <div>
+            <label for="userId">Логин:</label>
+            <input type="text" id="userId" name="userId" required>
+        </div>
+
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <button type="submit">Войти</button>
+    </form>
+    <p id="errorMessage"></p>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script type="module">
+        import { protocol, request } from '/js/protocol.js';
+
+        const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            errorMessage.textContent = '';
+
+            const userId = form.userId.value;
+            const password = form.password.value;
+
+            const result = await request(
+                () => protocol.login(userId, password),
+                (message) => {
+                    errorMessage.textContent = message;
+                }
+            );
+
+            if (result !== null) {
+                window.location.href = '/';
+            }
+        });
+    </script>
 </body>
 </html>

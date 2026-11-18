@@ -24,7 +24,6 @@ public class AccountService {
     public String login(Integer id, String password) {
         if (id==null||password==null) return null;
         User user = entityManager.find(User.class, id);
-        System.out.printf("%s %s %s %s %s", id, password, user, user.getPasswordHash(), hasher.hash(password));
         if (user == null || !user.getPasswordHash().equals(hasher.hash(password))) return null;
         String token = UUID.randomUUID().toString();
         entityManager.persist(new Session(hasher.hash(token), user, LocalDateTime.now().plusDays(7)));
@@ -99,6 +98,11 @@ public class AccountService {
     public Admin getAdmin(Integer id) {
         if(id==null) return null;
         return entityManager.find(Admin.class, id);
+    }
+
+    public Admin getAdmin(Session session) {
+        if(session==null) return null;
+        return getAdmin(session.getUser().getId());
     }
 
     public List<Doctor> getDoctorsBySpecialization(Specialization specialization) {

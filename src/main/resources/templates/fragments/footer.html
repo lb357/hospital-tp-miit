@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="footer">
+    <hr>
+    <div>
+        <a th:href="@{/about}">О проекте</a>
+        <a th:if="${@accountService.getAdmin(@cookieTokenResolver.getSession())!=null}" th:href="@{/admin}">Админ-панель</a>
+    </div>
+</header>
+</body>
+</html>

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Мои приёмы</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body><div th:replace="~{fragments/header :: header}"></div>
-<main data-appointments-role="PATIENT">
-    <div class="page-heading"><div><h1>Мои приёмы и медосмотры</h1><p class="lead">Список назначенных вам приёмов и направлений.</p></div><span class="badge">Пациент</span></div>
-    <div id="appointments-notice" class="notice"></div>
-    <section class="grid">
-        <article class="card half"><div class="toolbar"><h2>Мои приёмы</h2><button id="refresh-appointments" class="secondary" type="button">Обновить</button></div><div id="appointment-list" class="stack"></div></article>
-        <article class="card half"><div class="toolbar"><h2>Назначенные медосмотры</h2><button id="refresh-checkups" class="secondary" type="button">Обновить</button></div><div id="patient-checkup-list" class="stack"></div></article>
-        <article class="card"><h2>Запись на новый приём</h2><p class="muted">Текущий API не предоставляет пациенту список свободных слотов: <code>/api/appointment/get</code> возвращает только приёмы, уже связанные с пациентом. Для полноценной записи нужен отдельный endpoint получения доступных слотов. Существующие данные и контроллер приёмов не изменялись.</p></article>
-    </section>
-</main>
-<script th:src="@{/js/api.js}"></script><script th:src="@{/js/common.js}"></script><script th:src="@{/js/appointments.js}"></script></body></html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Приёмы</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>

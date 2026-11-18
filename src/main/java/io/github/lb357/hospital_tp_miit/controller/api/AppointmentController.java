@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/appointment")
@@ -82,8 +81,8 @@ public class AppointmentController {
     @PostMapping("/get")
     public ResponseEntity<List<AppointmentResponse>> get() {
         Session session = cookieTokenResolver.getSession();
-        if (session == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         User user = accountService.getUser(session);
+        if (session == null || user == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         List<Appointment> appointments;
         switch (user.getRole()) {
             case ADMIN -> appointments = appointmentService.getAllAppointments();
@@ -126,7 +125,7 @@ public class AppointmentController {
     public ResponseEntity<SuccessResponse> add(@RequestBody AppointmentAddRequest request) {
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
-        if (session == null || !user.getRole().equals(UserRole.PATIENT))
+        if (session == null || user == null || !user.getRole().equals(UserRole.PATIENT))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -146,7 +145,7 @@ public class AppointmentController {
     public ResponseEntity<EntryResponse> entryCreate(@RequestBody EntryCreateRequest request) {
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
-        if (session == null || !user.getRole().equals(UserRole.DOCTOR))
+        if (session == null || user == null || !user.getRole().equals(UserRole.DOCTOR))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -176,7 +175,7 @@ public class AppointmentController {
     public ResponseEntity<EntryResponse> entryUpdate(@RequestBody EntryUpdateRequest request) {
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
-        if (session == null || !user.getRole().equals(UserRole.DOCTOR))
+        if (session == null || user == null || !user.getRole().equals(UserRole.DOCTOR))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -208,7 +207,7 @@ public class AppointmentController {
     public ResponseEntity<EntryResponse> entryGet(@RequestBody EntryGetRequest request){
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
-        if (session == null || !(user.getRole().equals(UserRole.DOCTOR)||user.getRole().equals(UserRole.ADMIN)))
+        if (session == null || user == null || !(user.getRole().equals(UserRole.DOCTOR)||user.getRole().equals(UserRole.ADMIN)))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -237,7 +236,7 @@ public class AppointmentController {
     public ResponseEntity<List<EntryResponse>> record(@RequestBody RecordRequest request){
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
-        if (session == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (session == null || user == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Patient patient = accountService.getPatient(request.patientId());
         if (patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         if(user.getRole().equals(UserRole.PATIENT)&&!user.getId().equals(request.patientId()))
