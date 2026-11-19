@@ -41,7 +41,6 @@ async function post(endpoint, body) {
 export { ApiError };
 
 export const protocol = {
-    // AUTH
 
     login: (userId, password) =>
         post('/api/auth/login', { userId, password }),
@@ -61,7 +60,6 @@ export const protocol = {
             doctorSpecializationId
         }),
 
-    // USER
 
     userUpdate: (userId, lastName, firstName, patronymicName) =>
         post('/api/user/update', {
@@ -83,8 +81,8 @@ export const protocol = {
     specializationCreate: (name) =>
         post('/api/user/specialization/create', { name }),
 
-    specializationUpdate: (specializationId) =>
-        post('/api/user/specialization/update', { specializationId }),
+    specializationDelete: (specializationId) =>
+        post('/api/user/specialization/delete', { specializationId }),
 
     specializationGet: () =>
         post('/api/user/specialization/get'),
@@ -92,7 +90,6 @@ export const protocol = {
     specialists: (specializationId) =>
         post('/api/user/specialists', { specializationId }),
 
-    // CHECKUP
 
     checkupGet: (patientId) =>
         post('/api/checkup/get', { patientId }),
@@ -106,10 +103,9 @@ export const protocol = {
     checkupDelete: (checkupId) =>
         post('/api/checkup/delete', { checkupId }),
 
-    // APPOINTMENT
 
-    appointmentGet: () =>
-        post('/api/appointment/get'),
+    appointmentGet: (userId = null) =>
+        post('/api/appointment/get', { userId }),
 
     appointmentCreate: (doctorId, room, appointedTime) =>
         post('/api/appointment/create', {
@@ -126,6 +122,9 @@ export const protocol = {
             appointmentId,
             checkupId
         }),
+
+    appointmentRemove: (appointmentId) =>
+        post('/api/appointment/remove', { appointmentId }),
 
     entryCreate: (appointmentId, content) =>
         post('/api/appointment/entry/create', {

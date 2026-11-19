@@ -129,7 +129,7 @@ public class AuthController {
 
         User user;
 
-        switch (request.role()) {
+        switch (request.role().toLowerCase()) {
             case "patient" -> user = accountService.signupPatient(
                     request.lastName(),
                     request.firstName(),

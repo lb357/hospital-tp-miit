@@ -2,11 +2,63 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Приёмы</title>
+    <title>Мои приёмы</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script type="module" th:src="@{/js/patient-appointments.js}" defer></script>
 </head>
-    <body>
-        <div th:replace="~{fragments/header :: header}"></div>
-        <div th:replace="~{fragments/footer :: footer}"></div>
-    </body>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>Мои приёмы</h2>
+
+<ul id="appointmentsList"></ul>
+
+<hr>
+
+<h2>Мои медосмотры</h2>
+
+<ul id="checkupsList"></ul>
+
+<hr>
+
+<h2>Запись на приём</h2>
+
+<form id="appointmentBookForm" autocomplete="off">
+
+    <label for="bookingDirection">Направление:</label>
+    <select id="bookingDirection" required>
+        <option value="">-- Выберите направление --</option>
+        <option value="SELF">Самостоятельное</option>
+    </select>
+
+    <div id="checkupContainer" hidden>
+        <label for="bookingCheckup">Медосмотр:</label>
+        <select id="bookingCheckup">
+            <option value="">-- Выберите медосмотр --</option>
+        </select>
+    </div>
+
+    <label for="bookingSpecialization">Специальность:</label>
+    <select id="bookingSpecialization" required disabled>
+        <option value="">-- Сначала выберите направление --</option>
+    </select>
+
+    <label for="bookingDoctor">Специалист:</label>
+    <select id="bookingDoctor" required disabled>
+        <option value="">-- Сначала выберите специальность --</option>
+    </select>
+
+    <label for="bookingAppointment">Приём:</label>
+    <select id="bookingAppointment" required disabled>
+        <option value="">-- Сначала выберите специалиста --</option>
+    </select>
+
+    <button type="submit" id="bookingSubmit" disabled>
+        Записаться
+    </button>
+
+</form>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
 </html>

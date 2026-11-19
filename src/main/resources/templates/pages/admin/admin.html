@@ -1,12 +1,100 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <title>Панель администратора</title>
-        <link rel="stylesheet" th:href="@{/css/app.css}">
-    </head>
-    <body>
-        <div th:replace="~{fragments/header :: header}"></div>
-        <div th:replace="~{fragments/footer :: footer}"></div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script type="module" th:src="@{/js/admin.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+
+<h2>Пользователи</h2>
+<h3>Список</h3>
+<ul id="usersList"></ul>
+<h3>Управление пользователями</h3>
+<form id="userForm" autocomplete="off">
+    <label for="userSelect">Выбрать пользователя:</label>
+    <select id="userSelect" required></select>
+    <hr>
+    <button type="button" id="userRecordButton">
+        Открыть медкарту
+    </button>
+    <hr>
+    <input id="updateUserId" type="hidden">
+
+    <label for="updateLastName">Фамилия:</label>
+    <input id="updateLastName" required>
+
+    <label for="updateFirstName">Имя:</label>
+    <input id="updateFirstName" required>
+
+    <label for="updatePatronymicName">Отчество:</label>
+    <input id="updatePatronymicName">
+
+    <button type="submit">Изменить пользователя</button>
+    <hr>
+    <button type="button" id="userDeleteButton">Удалить</button>
+</form>
+<h3>Зарегистрировать пользователя</h3>
+
+<form id="userCreateForm" autocomplete="off">
+    <label for="newLastName">Фамилия:</label>
+    <input id="newLastName" required>
+
+    <label for="newFirstName">Имя:</label>
+    <input id="newFirstName" required>
+
+    <label for="newPatronymicName">Отчество:</label>
+    <input id="newPatronymicName">
+
+    <label for="newPassword">Пароль:</label>
+    <input id="newPassword" type="password" required>
+
+    <label for="newRole">Роль:</label>
+    <select id="newRole" required>
+        <option value="PATIENT">Пациент</option>
+        <option value="DOCTOR">Врач</option>
+        <option value="ADMIN">Администратор</option>
+    </select>
+
+    <div id="patientFields">
+        <label for="newGender">Пол:</label>
+        <select id="newGender">
+            <option value="true">Мужской</option>
+            <option value="false">Женский</option>
+        </select>
+    </div>
+
+    <div id="doctorFields" hidden>
+        <label for="newDoctorSpecialization">Специальность:</label>
+        <select id="newDoctorSpecialization"></select>
+    </div>
+    <br>
+    <button type="submit">Зарегистрировать</button>
+</form>
+
+<hr>
+
+<h2>Специальности врачей</h2>
+
+<ul id="specializationsList"></ul>
+
+<form id="specializationDeleteForm" autocomplete="off">
+    <label for="specializationSelect">Выбрать специальность:</label>
+    <select id="specializationSelect" required></select>
+    <button type="submit">Удалить</button>
+</form>
+
+<h3>Добавить специальность</h3>
+
+<form id="specializationCreateForm" autocomplete="off">
+    <label for="specializationName">Название:</label>
+    <input id="specializationName" required>
+    <button type="submit">Добавить</button>
+</form>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
 </html>

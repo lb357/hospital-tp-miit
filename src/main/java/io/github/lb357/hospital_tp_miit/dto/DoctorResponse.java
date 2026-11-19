@@ -1,5 +1,3 @@
 package io.github.lb357.hospital_tp_miit.dto;
-
-public record DoctorResponse(UserResponse user, SpecializationResponse specialization) {
-    static final String role = "doctor";
-}
+import com.fasterxml.jackson.annotation.JsonProperty;
+public record DoctorResponse(UserResponse user, SpecializationResponse specialization) {@JsonProperty("role") public String role() {return "doctor";}}

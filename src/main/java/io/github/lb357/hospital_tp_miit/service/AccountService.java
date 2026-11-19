@@ -90,6 +90,11 @@ public class AccountService {
         return entityManager.find(Patient.class, id);
     }
 
+    public Patient getPatient(Session session) {
+        if(session==null) return null;
+        return getPatient(session.getUser().getId());
+    }
+
     public Doctor getDoctor(Integer id) {
         if(id==null) return null;
         return entityManager.find(Doctor.class, id);

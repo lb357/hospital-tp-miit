@@ -4,9 +4,57 @@
         <meta charset="UTF-8">
         <title>Приёмы</title>
         <link rel="stylesheet" th:href="@{/css/app.css}">
+        <script type="module" th:src="@{/js/admin-appointments.js}" defer></script>
     </head>
     <body>
         <div th:replace="~{fragments/header :: header}"></div>
+        <h2>Приёмы</h2>
+
+        <ul id="appointmentsList"></ul>
+
+        <form id="appointmentDeleteForm">
+            <label for="appointmentSelect">Выбрать приём:</label>
+            <select id="appointmentSelect" required></select>
+            <button type="submit">Удалить</button>
+        </form>
+
+        <h3>Добавить приём</h3>
+
+        <form id="appointmentCreateForm">
+            <label for="appointmentDoctor">Врач:</label>
+            <select id="appointmentDoctor" required></select>
+
+            <label for="appointmentRoom">Кабинет:</label>
+            <input id="appointmentRoom" required>
+
+            <label for="appointmentTime">Дата и время:</label>
+            <input id="appointmentTime" type="datetime-local" required>
+
+            <button type="submit">Добавить</button>
+        </form>
+        <hr>
+
+        <h2>Медосмотры</h2>
+
+        <ul id="checkupsList"></ul>
+
+        <form id="checkupDeleteForm" autocomplete="off">
+            <label for="checkupSelect">Выбрать медосмотр:</label>
+            <select id="checkupSelect" required></select>
+            <button type="submit">Удалить</button>
+        </form>
+
+        <h3>Назначить медосмотр</h3>
+
+        <form id="checkupCreateForm" autocomplete="off">
+            <label for="checkupPatient">Пациент:</label>
+            <select id="checkupPatient" required></select>
+
+            <label for="checkupSpecializations">Специальности:</label>
+            <select id="checkupSpecializations" multiple required></select>
+
+            <button type="submit">Назначить</button>
+        </form>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </body>
 </html>

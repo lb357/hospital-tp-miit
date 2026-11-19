@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +19,9 @@ public class WebController {
 
 
     @GetMapping("/")
-    public String home(Model model) {return "pages/home/home";}
+    public String home(Model model) {
+        return "redirect:/login";
+    }
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -31,12 +34,7 @@ public class WebController {
     public String profile(Model model) {
         Session session = cookieTokenResolver.getSession();
         if (session == null) return "redirect:/login";
-        User user = accountService.getUser(session);
-        return switch (user.getRole()) {
-            case ADMIN -> "pages/profile/admin-profile";
-            case PATIENT -> "pages/profile/patient-profile";
-            case DOCTOR -> "pages/profile/doctor-profile";
-        };
+        return "pages/profile/profile";
     }
 
     @GetMapping("/admin")

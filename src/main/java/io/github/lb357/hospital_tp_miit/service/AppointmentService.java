@@ -49,6 +49,13 @@ public class AppointmentService {
         ).getResultStream().filter(appointment -> !isAppointmentCompleted(appointment)).toList();
     }
 
+    public List<Appointment> getCompletedPatientAppointments(Patient patient) {
+        return entityManager.createQuery("SELECT a FROM Appointment a WHERE a.patient = :patient",
+                Appointment.class
+        ).setParameter("patient", patient
+        ).getResultStream().toList();
+    }
+
     public Boolean addPatientToAppointment(Appointment appointment, Patient patient) {
         if (appointment.getPatient() != null) return false;
         if (getPatientAppointments(patient).stream().anyMatch(otherPatientAppointment ->

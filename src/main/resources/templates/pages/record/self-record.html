@@ -2,11 +2,18 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Медкарта</title>
+    <title>Медицинская карта</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script type="module" th:src="@{/js/self-record.js}" defer></script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
+<input type="hidden" id="patientId"
+       th:value="${@accountService.getPatient(@cookieTokenResolver.getSession()).getId()}">
+<h2>Медицинская карта</h2>
+
+<ul id="recordList"></ul>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

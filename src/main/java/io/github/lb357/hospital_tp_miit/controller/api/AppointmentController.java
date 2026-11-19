@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/appointment")
@@ -60,26 +61,27 @@ public class AppointmentController {
                 ),
                 null,
                 room,
-                appointedTime
+                appointedTime,
+                appointmentService.isAppointmentCompleted(appointment)
         ));
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody AppointmentDeleteRequest request) {
+    public ResponseEntity<SuccessResponse> delete(@RequestBody AppointmentDeleteRequest request) {
         Session session = cookieTokenResolver.getSession();
         if (session == null || !accountService.getUser(session).getRole().equals(UserRole.ADMIN))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment!=null) {
             appointmentService.deleteAppointment(appointment);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new SuccessResponse(true));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SuccessResponse(false));
         }
     }
 
     @PostMapping("/get")
-    public ResponseEntity<List<AppointmentResponse>> get() {
+    public ResponseEntity<List<AppointmentResponse>> get(@RequestBody AppointmentGetRequest request) {
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
         if (session == null || user == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -87,7 +89,13 @@ public class AppointmentController {
         switch (user.getRole()) {
             case ADMIN -> appointments = appointmentService.getAllAppointments();
             case DOCTOR -> appointments = appointmentService.getDoctorAppointments(accountService.getDoctor(user.getId()));
-            case PATIENT -> appointments = appointmentService.getPatientAppointments(accountService.getPatient(user.getId()));
+            case PATIENT -> {
+                if (request.userId().isPresent()) {
+                    appointments = appointmentService.getDoctorAppointments(accountService.getDoctor(request.userId().get())).stream().filter(appointment -> appointment.getPatient()==null&&appointment.getCheckup()==null).toList();
+                } else {
+                    appointments = appointmentService.getPatientAppointments(accountService.getPatient(user.getId()));
+                }
+            }
             default -> appointments = List.of();
         }
         return ResponseEntity.ok(appointments.stream().map(appointment ->
@@ -116,7 +124,8 @@ public class AppointmentController {
                         ),
                         appointment.getCheckup()!=null?appointment.getCheckup().getId():null,
                         appointment.getRoom(),
-                        appointment.getAppointedTime()
+                        appointment.getAppointedTime(),
+                        appointmentService.isAppointmentCompleted(appointment)
                 )
         ).toList());
     }
@@ -129,7 +138,7 @@ public class AppointmentController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Appointment appointment = appointmentService.getAppointment(request.appointmentId());
         if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        Boolean success = false;
+        Boolean success;
         if (request.checkupId()==null) {
             success = appointmentService.addPatientToAppointment(appointment, accountService.getPatient(user.getId()));
         } else {
@@ -139,6 +148,20 @@ public class AppointmentController {
             success = appointmentService.addPatientToAppointment(appointment, checkup);
         }
         return ResponseEntity.ok(new SuccessResponse(success));
+    }
+
+    @PostMapping("/remove")
+    public ResponseEntity<SuccessResponse> remove(@RequestBody AppointmentRemoveRequest request) {
+        Session session = cookieTokenResolver.getSession();
+        User user = accountService.getUser(session);
+        if (session == null || user == null || !user.getRole().equals(UserRole.PATIENT))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Appointment appointment = appointmentService.getAppointment(request.appointmentId());
+        if (appointment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (!appointment.getPatient().getId().equals(user.getId()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new SuccessResponse(false));
+        appointmentService.removePatientFromAppointment(appointment);
+        return ResponseEntity.ok(new SuccessResponse(true));
     }
 
     @PostMapping("/entry/create")

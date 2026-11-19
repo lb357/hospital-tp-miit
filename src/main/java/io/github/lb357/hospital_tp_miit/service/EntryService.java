@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -34,6 +35,6 @@ public class EntryService {
     }
 
     public List<Entry> getPatientEntries(Patient patient) {
-        return appointmentService.getPatientAppointments(patient).stream().map(this::getAppointmentEntry).toList();
+        return appointmentService.getCompletedPatientAppointments(patient).stream().map(this::getAppointmentEntry).filter(Objects::nonNull).toList();
     }
 }

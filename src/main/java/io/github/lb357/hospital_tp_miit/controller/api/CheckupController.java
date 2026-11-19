@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/checkup")
@@ -45,12 +46,13 @@ public class CheckupController {
                 || request.specializationIds() == null || request.specializationIds().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
+
         Patient patient = accountService.getPatient(request.patientId());
         if (patient == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         Map<Integer, Specialization> specializationsById = new LinkedHashMap<>();
-        for (Integer specializationId : request.specializationIds()) {
+        for (Integer specializationId : request.specializationIds().stream().distinct().toList()) {
             if (specializationId == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             Specialization specialization = specializationService.getSpecialization(specializationId);
@@ -71,7 +73,8 @@ public class CheckupController {
                                 .map(specialization -> new SpecializationResponse(
                                         specialization.getId(), specialization.getName())
                                 )
-                                .toList()
+                                .toList(),
+                        checkupService.isCheckupCompleted(checkup)
         ));
     }
 
@@ -128,7 +131,8 @@ public class CheckupController {
                     ),
                     checkup.getSpecializations().stream()
                             .map(specialization -> new SpecializationResponse(specialization.getId(), specialization.getName()))
-                            .toList()
+                            .toList(),
+                    checkupService.isCheckupCompleted(checkup)
             );
         }).toList());
     }

@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <title>Приёмы</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script type="module" th:src="@{/js/doctor-appointments.js}" defer></script>
 </head>
-    <body>
-        <div th:replace="~{fragments/header :: header}"></div>
-        <div th:replace="~{fragments/footer :: footer}"></div>
-    </body>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>Список приёмов</h2>
+
+<ul id="appointmentsList"></ul>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
 </html>

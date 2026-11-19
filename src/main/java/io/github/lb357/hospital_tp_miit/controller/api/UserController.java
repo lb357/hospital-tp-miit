@@ -105,18 +105,20 @@ public class UserController {
         Session session = cookieTokenResolver.getSession();
         User user = accountService.getUser(session);
 
-        switch (user) {
+        switch (user.getRole()) {
             case null -> {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            case Patient patient -> {
+            case PATIENT -> {
+                Patient patient = accountService.getPatient(user.getId());
                 return ResponseEntity.ok(new PatientResponse(
                         new UserResponse(user.getId(), user.getLastName(),
                                 user.getFirstName(), user.getPatronymicName()),
                         patient.isGender()
                 ));
             }
-            case Doctor doctor -> {
+            case DOCTOR -> {
+                Doctor doctor = accountService.getDoctor(user.getId());
                 Specialization specialization = doctor.getSpecialization();
 
                 return ResponseEntity.ok(new DoctorResponse(
@@ -127,17 +129,16 @@ public class UserController {
                                         specialization.getName())
                 ));
             }
-            case Admin admin -> {
+            case ADMIN -> {
                 return ResponseEntity.ok(new AdminResponse(
                         new UserResponse(user.getId(), user.getLastName(),
                                 user.getFirstName(), user.getPatronymicName())
                 ));
             }
             default -> {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         }
-        return ResponseEntity.ok(new UserResponse(user.getId(),
-                user.getLastName(), user.getFirstName(), user.getPatronymicName()));
     }
 
     @PostMapping("/get")
@@ -150,7 +151,7 @@ public class UserController {
                 .map(user -> {
                     if (user.getRole()==UserRole.PATIENT) {
                         Patient patient = accountService.getPatient(user.getId());
-                        return (Object) new PatientResponse(
+                        return new PatientResponse(
                                 new UserResponse(user.getId(), user.getLastName(),
                                         user.getFirstName(), user.getPatronymicName()),
                                 patient.isGender()
@@ -199,9 +200,9 @@ public class UserController {
                 specialization.getId(), specialization.getName()));
     }
 
-    @PostMapping("/specialization/update")
-    public ResponseEntity<SuccessResponse> specializationUpdate(
-            @RequestBody SpecializationUpdateRequest request) {
+    @PostMapping("/specialization/delete")
+    public ResponseEntity<SuccessResponse> specializationDelete(
+            @RequestBody SpecializationDeleteRequest request) {
         User administrator = accountService.getUser(cookieTokenResolver.getSession());
         if (administrator == null || administrator.getRole() != UserRole.ADMIN)
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -226,9 +227,8 @@ public class UserController {
 
     @PostMapping("/specialization/get")
     public ResponseEntity<List<SpecializationResponse>> specializationGet() {
-        User administrator = accountService.getUser(cookieTokenResolver.getSession());
-        if (administrator == null || administrator.getRole() != UserRole.ADMIN)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        User user = accountService.getUser(cookieTokenResolver.getSession());
+        if (user == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         return ResponseEntity.ok(specializationService.getSpecializations().stream()
                 .map(specialization -> new SpecializationResponse(
